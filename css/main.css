@@ -2,9 +2,16 @@
  * Estilos de tu proyecto
  */
  .menu{
-   border: none;
+   text-decoration: none;
  }
+
+ .estilo_menu:hover{
+   cursor: pointer;
+ }
+
 
  .estilo_menu{
    display: inline-block;
+   padding: 10px;
+   border: 1px solid black;
  }
