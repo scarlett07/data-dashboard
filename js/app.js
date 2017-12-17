@@ -2,8 +2,13 @@
  * Funcionalidad de tu producto
  */
 
+function getEnlaces (){
 //obteniendo los keys para crear botones, que son el primer nivel de la data
  var cities = Object.keys(data);
+ var rutas= ['views/AQP/AQP.html',
+             'views/CDMX/CDMX.html',
+             'views/LIM/LIM.html',
+             'views/SCL/SCL.html']
 //creando variables necesarias
  var menu = document.getElementById('menu');
  // iterando para crear los botones necesarios con cada key
@@ -13,7 +18,7 @@
    var contenerEtiqueta= document.createElement('div');
    //le damos atributos a los enlaces
    enlace.className='menu';
-   //enlace.href='views/CDMX/'+ cities[i]+'.html'; //esta parte es para enlazarlo a la nueva pagina, pero no se si hay que hacer un js nuevo o como enlazarlo a este js
+   enlace.href= rutas[i]; //esta parte es para enlazarlo a la nueva pagina
    contenerEtiqueta.className='estilo_menu';
    //los asociamos a un evento
  	 enlace.innerHTML = cities[i];
@@ -22,14 +27,19 @@
  	 menu.appendChild(contenerEtiqueta);
    contenerEtiqueta.appendChild(enlace);
  }
+}
 
 //accedidndo al segundo nivel de la data (genaraciones)
  function getDataByCity(event) {
    var city = event.srcElement.innerHTML;
    var gen = Object.keys(data[city]);
    for (var i = 0; i < gen.length; i++) {
-     var selectores= document.createElement('select');//no debe ser un selct y debes acomodarlo
+     var selectores= document.createElement('input');//no debe ser un selct y debes acomodarlo
      var contenedorSelectet=document.createElement('div');
+
+     //Dando atributos
+     selectores.type='checkbox';
+     selectores.value= gen[i];
      selectores.innerHTML= gen[i];
      menu.appendChild(contenedorSelectet);
      contenedorSelectet.appendChild(selectores);
