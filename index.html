@@ -1,25 +1,35 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="css/main.css">
-    <!-- Añadiendo libreria char.js para hacer gráficas -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>
-    <title>Data Dashboard</title>
-  </head>
-  <body>
-    <nav id="menu">
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="css/main.css">
+  <!-- Añadiendo libreria char.js para hacer gráficas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>
+  <title>Data Dashboard</title>
+</head>
+
+<body>
+  <nav id="menu">
+    <div class="estilo_menu">
+      <a class="cities" href="views/AQP/aqp.html">AQP</a>|
+      <a class="cities" href="views/CDMX/cdmx.html">CDMX</a>|
+      <a class="cities" href="views/SCL/scl.html">SCL</a>|
+      <a class="cities" href="views/LIM/lim.html">LIM</a>|
+    </div>
+
+  </nav>
+  <section class="sub_nav">
+    <div class="sub_nav_box">
+
+    </div>
+  </section>
 
 
-    </nav>
-    <section id="main-grafics">
+  <!-- Base de datos -->
+  <script src="js/data.js"></script>
+  <!-- Aquí va tus archivos JS -->
+  <script src="js/app.js"></script>
+</body>
 
-    </section>
-
-
-		<!-- Base de datos -->
-		<script src="js/data.js"></script>
-		<!-- Aquí va tus archivos JS -->
-    <script src="js/app.js"></script>
-  </body>
 </html>

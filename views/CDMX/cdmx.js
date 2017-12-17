@@ -1,1 +1,1 @@
-getEnlaces();
+buildCheckBox('CDMX');

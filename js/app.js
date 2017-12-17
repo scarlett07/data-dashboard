@@ -1,55 +1,29 @@
 /*
  * Funcionalidad de tu producto
  */
+ 
+function buildCheckBox(city) {
+  var subMenu = document.getElementsByClassName('sub_nav_box');
+  var gen = Object.keys(data[city]);
+  for (var i = 0; i < gen.length; i++) {
+    var selectores = document.createElement('input');
+    var contenedorSelectet = document.createElement('div');
+    var nameGen = document.createElement('label');
 
-function getEnlaces (){
-//obteniendo los keys para crear botones, que son el primer nivel de la data
- var cities = Object.keys(data);
- var rutas= ['views/AQP/AQP.html',
-             'views/CDMX/CDMX.html',
-             'views/LIM/LIM.html',
-             'views/SCL/SCL.html']
-//creando variables necesarias
- var menu = document.getElementById('menu');
- // iterando para crear los botones necesarios con cada key
- for(i = 0; i < cities.length; i++) {
-   //creamos los enlaces para cada CD
- 	 var enlace = document.createElement('a');
-   var contenerEtiqueta= document.createElement('div');
-   //le damos atributos a los enlaces
-   enlace.className='menu';
-   enlace.href= rutas[i]; //esta parte es para enlazarlo a la nueva pagina
-   contenerEtiqueta.className='estilo_menu';
-   //los asociamos a un evento
- 	 enlace.innerHTML = cities[i];
- 	 enlace.onclick = getDataByCity;
-   //le decimos donde los va a crear
- 	 menu.appendChild(contenerEtiqueta);
-   contenerEtiqueta.appendChild(enlace);
- }
+    //Dando atributos
+    selectores.type = 'checkbox';
+    selectores.value = gen[i];
+    nameGen.innerHTML = gen[i];
+    menu.appendChild(contenedorSelectet);
+    contenedorSelectet.appendChild(selectores);
+    contenedorSelectet.appendChild(nameGen);
+  }
+  console.log(gen);
 }
 
-//accedidndo al segundo nivel de la data (genaraciones)
- function getDataByCity(event) {
-   var city = event.srcElement.innerHTML;
-   var gen = Object.keys(data[city]);
-   for (var i = 0; i < gen.length; i++) {
-     var selectores= document.createElement('input');//no debe ser un selct y debes acomodarlo
-     var contenedorSelectet=document.createElement('div');
-
-     //Dando atributos
-     selectores.type='checkbox';
-     selectores.value= gen[i];
-     selectores.innerHTML= gen[i];
-     menu.appendChild(contenedorSelectet);
-     contenedorSelectet.appendChild(selectores);
-   }
-   console.log(gen);
- }
 
 
-
- // // Inicializamos variable activo
+// // Inicializamos variable activo
 // var active;
 // // Inicializamos varible contador
 // var counter = [];
@@ -106,6 +80,38 @@ function getEnlaces (){
 //     }
 // })
 
+
+function addEvent() {
+  //obteniendo los keys para crear botones, que son el primer nivel de la data
+  var checkbox = document.getElementsByClassName('cities');
+  // iterando para crear los botones necesarios con cada key
+  for (i = 0; i < checkbox.length; i++) {
+    //creamos los enlaces para cada CD
+    //los asociamos a un evento
+    checkbox[i].onclick = buildCheckBoxByCity;
+    //le decimos donde los va a crear
+  }
+}
+
+// //accedidndo al segundo nivel de la data (genaraciones)
+// function buildCheckBoxByCity(event) {
+//   var subMenu = document.getElementsByClassName('sub_nav_box');
+//   var city = event.srcElement.innerHTML;
+//   var gen = Object.keys(data[city]);
+//   for (var i = 0; i < gen.length; i++) {
+//     var selectores = document.createElement('input'); //no debe ser un selct y debes acomodarlo
+//     var contenedorSelectet = document.createElement('div');
+//
+//     //Dando atributos
+//     selectores.type = 'checkbox';
+//     selectores.value = gen[i];
+//     selectores.innerHTML = gen[i];
+//     menu.appendChild(contenedorSelectet);
+//     contenedorSelectet.appendChild(selectores);
+//   }
+//   console.log(gen);
+// }
+//
 
 
 
