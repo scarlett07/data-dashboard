@@ -1,7 +1,11 @@
-/*
- * Funcionalidad de tu producto
- */
- 
+//creamos las variables que utilizaremos
+var generaciones = new Set();
+var optionSelected = 'students';
+var options = document.formOptions.options;
+for (var i = 0; i < options.length; i++) {
+  options[i].onchange = onChangeOptions;
+}
+// Creamos una función para obtener las generaciones por ciudad y que se muestre en cada CD
 function buildCheckBox(city) {
   var subMenu = document.getElementsByClassName('sub_nav_box');
   var gen = Object.keys(data[city]);
@@ -14,105 +18,106 @@ function buildCheckBox(city) {
     selectores.type = 'checkbox';
     selectores.value = gen[i];
     nameGen.innerHTML = gen[i];
+    //Le decimos donde lo cree
     menu.appendChild(contenedorSelectet);
     contenedorSelectet.appendChild(selectores);
     contenedorSelectet.appendChild(nameGen);
-  }
-  console.log(gen);
-}
-
-
-
-// // Inicializamos variable activo
-// var active;
-// // Inicializamos varible contador
-// var counter = [];
-// var alumnas = data['AQP']['2016-2']['students'];
-
-// // Declaramos la funcion que contara el numero de estudiantes activas en AQP 2016-2
-// function activeStudents() {
-// 	// Hacemos un for que itere el numero de estudiantes en esa generacion
-// 	for(var i = 0; i < alumnas.length; i++) {
-// 		// alojamos el valor en la posicion i, ya que estudiantes es un arreglo
-// 		active = alumnas[i]['active'];
-// 		// si active es igual a true entonces lo añadimos al arreglo contador
-// 		if(active === true) {
-// 			counter.push(active);
-// 		}
-// 	}
-// 	// hacemos la impresion del numero de activas con .length
-// 	return (counter.length);
-// }
-
-// // Puedes hacer uso de la base de datos a través de la variable `data`
-// //Llamamos a la funcion
-// //activeStudents();
-
-// // Pintar grafica
-
-// var ctx = document.getElementById("myChart").getContext("2d");
-// var myChart = new Chart(ctx, {
-// 	type: 'bar',
-// 	data: {
-// 		labels: ["AQP 2016-2"],
-//         datasets: [{
-//             label: '# of Students',
-//             data: [
-//             activeStudents(),
-//             ],
-//             backgroundColor: [
-//                 'rgba(255, 99, 132, 0.2)',
-//             ],
-//             borderColor: [
-//                 'rgba(255,99,132,1)',
-//             ],
-//             borderWidth: 1
-//         }]
-//     },
-//     options: {
-//         scales: {
-//             yAxes: [{
-//                 ticks: {
-//                     beginAtZero:true
-//                 }
-//             }]
-//         }
-//     }
-// })
-
-
-function addEvent() {
-  //obteniendo los keys para crear botones, que son el primer nivel de la data
-  var checkbox = document.getElementsByClassName('cities');
-  // iterando para crear los botones necesarios con cada key
-  for (i = 0; i < checkbox.length; i++) {
-    //creamos los enlaces para cada CD
-    //los asociamos a un evento
-    checkbox[i].onclick = buildCheckBoxByCity;
-    //le decimos donde los va a crear
+    //Le asociamos un evento que verifique si que opción esta seleccionada, para las generaciones
+    selectores.onchange = function(event) {
+      var currentOption = event.srcElement;
+      if (currentOption.checked) {
+        generaciones.add(currentOption.value);
+      } else {
+        generaciones.delete(currentOption.value);
+      }
+      getStudents();
+    }
   }
 }
 
-// //accedidndo al segundo nivel de la data (genaraciones)
-// function buildCheckBoxByCity(event) {
-//   var subMenu = document.getElementsByClassName('sub_nav_box');
-//   var city = event.srcElement.innerHTML;
-//   var gen = Object.keys(data[city]);
-//   for (var i = 0; i < gen.length; i++) {
-//     var selectores = document.createElement('input'); //no debe ser un selct y debes acomodarlo
-//     var contenedorSelectet = document.createElement('div');
-//
-//     //Dando atributos
-//     selectores.type = 'checkbox';
-//     selectores.value = gen[i];
-//     selectores.innerHTML = gen[i];
-//     menu.appendChild(contenedorSelectet);
-//     contenedorSelectet.appendChild(selectores);
-//   }
-//   console.log(gen);
-// }
-//
+// Creando la funcion que verifique que opcion esta pidiendo el usuario (estudiantes o estadisticas)
+function onChangeOptions(event) {
+  optionSelected = event.srcElement.value;
+  getStudents();
+}
 
+// creando la funcion que con base en la opcion seleccionada generé la gráficas o los datos que se le piden.
+function getStudents() {
+  if (generaciones.size > 0) {
+    var information = [];
+    for (let generacion of generaciones) {
+      console.log(data[city][generacion][optionSelected]);
+      information.push(data[city][generacion][optionSelected]);
+    }
+    switch (optionSelected) {
+      case 'students':
+        // console.log('Students');
+        // console.log(information);
+        // makeViewStudents(information);
+        break;
+      case 'ratings':
+        // console.log('Ratings');
+        // console.log(information);
+        makeViewRatings(information);
+        break;
+    }
+  }
+}
 
+//funciones para generar los datos y las estadisticas.
+function makeViewRatings(information) {
+  if (information.length > 0) {
+    for (var i = 0; i < information.length; i++) {
+      var cumple = 0,
+        no_cumple = 0,
+        supera = 0,
+        total = 0,
+        chart = null;
+      for (var j = 0; j < information[i].length; j++) {
+        var currentValue = information[i][j];
+        cumple += currentValue.student.cumple;
+        no_cumple += currentValue.student['no-cumple'];
+        supera += currentValue.student.supera;
+        console.log(information[i][j]);
+      }
+      total = cumple + no_cumple + supera;
+      cumple_porcentaje = (cumple / total) * 100;
+      no_cumple_porcentaje = (no_cumple / total) * 100;
+      supera_porcentaje = (supera / total) * 100;
 
-console.log(data);
+      var charts = document.getElementById('charts');
+      chart = document.createElement('div');
+      chart.innerHMTL = 'Gráfica 01';
+      chart.id = 'chart' + i;
+      chart.style = 'width: 100%; height: 400px; background-color: #FFFFFF;';
+      charts.appendChild(chart);
+      AmCharts.makeChart(chart.id, {
+        'type': 'pie',
+        'balloonText': '[[title]]<br><span style="font-size:14px"><b>[[value]]</b> ([[percents]]%)</span>',
+        'titleField': 'category',
+        'valueField': 'column-1',
+        'allLabels': [],
+        'balloon': {},
+        'legend': {
+          'enabled': true,
+          'align': 'center',
+          'markerType': 'circle'
+        },
+        'titles': [],
+        'dataProvider': [{
+            'category': 'Cumple',
+            'column-1': cumple
+          },
+          {
+            'category': 'No Cumple',
+            'column-1': no_cumple
+          },
+          {
+            'category': 'Supera',
+            'column-1': supera
+          }
+        ]
+      });
+    }
+  }
+}

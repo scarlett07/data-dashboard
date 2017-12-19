@@ -1,28 +1,44 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <!-- enlazando el mismo css -->
-    <link rel="stylesheet" href="../../css/main.css">
-    <!-- Añadiendo libreria char.js para hacer gráficas -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>
-    <title>CDMX</title>
-  </head>
-  <body>
-    <body>
-      <nav id="menu">
-        <div class="home estilo_menu">
-          aqui iria el logo de laboratoria
-          que te direccionaria a la pagina principal
-        </div>
-        <div class="estilo_menu">
-          <a href="AQP.html">AQP</a>|
-          <a class="cities" href="../CDMX/cdmx.html">CDMX</a>|
-          <a class="cities" href="../SCL/scl.html">SCL</a>|
-          <a class="cities" href="../LIM/lim.html">LIM</a>|
-        </div>
 
-      </nav>
+<head>
+  <meta charset="utf-8">
+  <!-- enlazando el mismo css -->
+  <link rel="stylesheet" href="../../css/main.css">
+  <!-- Añadiendo libreria char.js para hacer gráficas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>
+  <script type="text/javascript" src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+  <script type="text/javascript" src="https://www.amcharts.com/lib/3/pie.js"></script>
+  <title>AQP</title>
+</head>
+
+<body>
+
+  <body>
+    <nav id="menu">
+      <div class="home estilo_menu">
+        aqui iria el logo de laboratoria que te direccionaria a la pagina principal
+      </div>
+      <div class="estilo_menu">
+        <a href="AQP.html">AQP</a>|
+        <a class="cities" href="../CDMX/cdmx.html">CDMX</a>|
+        <a class="cities" href="../SCL/scl.html">SCL</a>|
+        <a class="cities" href="../LIM/lim.html">LIM</a>|
+      </div>
+
+    </nav>
+    <div class="">
+      <form class="" name="formOptions">
+        <label for="students">Estudiantes</label>
+        <input type="radio" name="options" value="students" id="students" checked>
+        <label for="ratings">Estadisticas</label>
+        <input type="radio" name="options" value="ratings" id="ratings">
+      </form>
+    </div>
+    <div id="charts">
+    </div>
+    <!-- <div id="chartdiv" style="width: 100%; height: 400px; background-color: #FFFFFF;" ></div> -->
+
     <!-- enlazando la data -->
     <script type="text/javascript" src="../../js/data.js"></script>
     <!-- enlazando el JS principal, para poder llamar sus funciones en caso de ser necesario -->
@@ -31,4 +47,5 @@
     <script type="text/javascript" src="aqp.js"></script>
 
   </body>
+
 </html>

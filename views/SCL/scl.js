@@ -1,1 +1,2 @@
-buildCheckBox('SCL');
+var city = 'SCL'
+buildCheckBox(city);

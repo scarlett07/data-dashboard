@@ -1,1 +1,2 @@
-buildCheckBox('LIM');
+var city = 'LIM'
+buildCheckBox(city);

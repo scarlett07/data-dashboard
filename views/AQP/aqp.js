@@ -1,1 +1,2 @@
-buildCheckBox('AQP');
+var city = 'AQP';
+buildCheckBox(city);
