@@ -2,6 +2,9 @@
 var generaciones = new Set();
 var optionSelected = 'students';
 var options = document.formOptions.options;
+var students_generation = document.getElementById('students_generation');
+var charts = document.getElementById('charts');
+var chart_sprint = document.getElementById('chart-sprint');
 for (var i = 0; i < options.length; i++) {
   options[i].onchange = onChangeOptions;
 }
@@ -44,10 +47,9 @@ function onChangeOptions(event) {
 // creando la funcion que con base en la opcion seleccionada generé la gráficas o los datos que se le piden.
 function getStudents() {
   if (generaciones.size > 0) {
-    var information = [];
+    var information = new Map();
     for (let generacion of generaciones) {
-      console.log(data[city][generacion][optionSelected]);
-      information.push(data[city][generacion][optionSelected]);
+      information.set(generacion, data[city][generacion][optionSelected]);
     }
     switch (optionSelected) {
       case 'students':
@@ -59,41 +61,166 @@ function getStudents() {
         // console.log('Ratings');
         // console.log(information);
         makeViewRatings(information);
+        for (let generacion of generaciones) {
+          information.set(generacion, data[city][generacion]['students']);
+        }
+        makeViewRatingsStudents(information);
         break;
+    }
+  } else {
+    students_generation.innerHTML = '';
+    charts.innerHTML = '';
+    chart_sprint.innerHTML = '';
+  }
+}
+
+function makeViewRatingsStudents(information) {
+  if (information.size > 0) {
+    students_generation.innerHTML = '';
+    for (var [generation, students] of information.entries()) {
+      var active = 0,
+        no_active = 0;
+      console.log(generation);
+      // console.log(students);
+      var meta_supera = [];
+      var meta = [];
+      var meta_no_supera = [];
+      for (var k = 0; k < 4; k++) {
+        meta_supera[k] = null;
+        meta[k] = null;
+        meta_no_supera[k] = null;
+      }
+      for (var i = 0; i < students.length; i++) {
+        var student = students[i];
+        student.active === true ? active++ : no_active++;
+        if (student.active) {
+          console.log(student.sprints.length);
+          for (var j = 1; j <= student.sprints.length; j++) {
+            var sprint = student.sprints[j - 1];
+            var total_puntos = 0;
+            total_puntos = sprint.score.hse + sprint.score.tech;
+            // console.log(total_puntos);
+            total_puntos > 2100 ? meta_supera[j - 1]++ : total_puntos === 2100 ? meta[j - 1]++ : meta_no_supera[j - 1]++;
+          }
+        }
+      }
+      console.log(meta_supera);
+      console.log(meta);
+      console.log(meta_no_supera);
+
+      makeSprintChart(meta_supera, meta, meta_no_supera, generation);
+
+
+      current_generation = document.createElement('div');
+      // current_generation.innerText = 'Generación: ' + generation + 'Activas: ' + active + 'No Activas' + no_active;
+      desercion = (no_active * 100) / (students.length)
+      current_generation.innerText = 'Generación: ' + generation + ' Activas: ' + active + ' Deserción: ' + desercion + '%';
+      students_generation.appendChild(current_generation);
     }
   }
 }
 
+function makeSprintChart(meta_supera, meta, meta_no_supera, generation) {
+  chart = document.createElement('div');
+  // chart.innerHTML = 'Gráfica ' + generation;
+  chart.id = 'chart-sprint-' + generation;
+  chart.style = 'width: 50%; height: 400px; background-color: #FFFFFF;';
+  chart_sprint.appendChild(chart);
+  dataProvider = [];
+  for (var i = 0; i < 4; i++) {
+    dataProvider.push({
+      'category': 'Sprint 0' + (i + 1),
+      'column-1': meta_no_supera[i] === null ? 0 : meta_no_supera[i],
+      'column-2': meta[i] === null ? 0 : meta[i],
+      'column-3': meta_supera[i] === null ? 0 : meta_supera[i]
+    })
+  }
+
+  AmCharts.makeChart(chart.id, {
+    'type': 'serial',
+    'categoryField': 'category',
+    'angle': 30,
+    'depth3D': 30,
+    'startDuration': 1,
+    'categoryAxis': {
+      'gridPosition': 'start'
+    },
+    'trendLines': [],
+    'graphs': [{
+        'balloonText': '[[title]] de [[category]]:[[value]]',
+        'fillAlphas': 1,
+        'id': 'AmGraph-1',
+        'title': 'No Supera Meta',
+        'type': 'column',
+        'valueField': 'column-1'
+      },
+      {
+        'balloonText': '[[title]] de [[category]]:[[value]]',
+        'fillAlphas': 1,
+        'id': 'AmGraph-2',
+        'title': 'Meta',
+        'type': 'column',
+        'valueField': 'column-2'
+      },
+      {
+        'balloonText': '[[title]] de [[category]]:[[value]]',
+        'fillAlphas': 1,
+        'id': 'AmGraph-3',
+        'title': 'Supera Meta',
+        'type': 'column',
+        'valueField': 'column-3'
+      }
+    ],
+    'guides': [],
+    'valueAxes': [{
+      'id': 'ValueAxis-1',
+      'stackType': '100%',
+      'title': 'Axis title'
+    }],
+    'allLabels': [],
+    'balloon': {},
+    'legend': {
+      'enabled': true,
+      'useGraphSettings': true
+    },
+    'titles': [{
+      'id': 'Title-1',
+      'size': 15,
+      'text': 'Evaluaciones de las estudiantes, ' + generation
+    }],
+    'dataProvider': dataProvider
+  });
+}
+
 //funciones para generar los datos y las estadisticas.
 function makeViewRatings(information) {
-  if (information.length > 0) {
-    for (var i = 0; i < information.length; i++) {
+  if (information.size > 0) {
+    charts.innerHTML = '';
+    for (var [generation, ratings] of information.entries()) {
       var cumple = 0,
         no_cumple = 0,
         supera = 0,
         total = 0,
         chart = null;
-      for (var j = 0; j < information[i].length; j++) {
-        var currentValue = information[i][j];
-        cumple += currentValue.student.cumple;
-        no_cumple += currentValue.student['no-cumple'];
-        supera += currentValue.student.supera;
-        console.log(information[i][j]);
+      for (var rating of ratings) {
+        cumple += rating.student.cumple;
+        no_cumple += rating.student['no-cumple'];
+        supera += rating.student.supera;
       }
+
       total = cumple + no_cumple + supera;
       cumple_porcentaje = (cumple / total) * 100;
       no_cumple_porcentaje = (no_cumple / total) * 100;
       supera_porcentaje = (supera / total) * 100;
 
-      var charts = document.getElementById('charts');
       chart = document.createElement('div');
-      chart.innerHMTL = 'Gráfica 01';
-      chart.id = 'chart' + i;
-      chart.style = 'width: 100%; height: 400px; background-color: #FFFFFF;';
+      chart.innerHTML = 'Gráfica 01';
+      chart.id = 'chart-' + generation;
+      chart.style = 'width: 50%; height: 400px; background-color: #FFFFFF;';
       charts.appendChild(chart);
       AmCharts.makeChart(chart.id, {
         'type': 'pie',
-        'balloonText': '[[title]]<br><span style="font-size:14px"><b>[[value]]</b> ([[percents]]%)</span>',
+        'balloonText': '[[title]]<br><span style="font - size: 14 px "><b>[[value]]</b> ([[percents]]%)</span>',
         'titleField': 'category',
         'valueField': 'column-1',
         'allLabels': [],
